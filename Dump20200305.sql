@@ -26,10 +26,14 @@ CREATE TABLE `accountdetails` (
   `accountId` int NOT NULL AUTO_INCREMENT,
   `employeeId` int NOT NULL,
   `bankName` varchar(45) NOT NULL,
-  `branchName` varchar(45) NOT NULL,
+  `locality` varchar(80) NOT NULL,
+  `cityId` int NOT NULL,
   `accountNumber` varchar(24) NOT NULL,
   `IFSCCode` varchar(20) NOT NULL,
   PRIMARY KEY (`accountId`),
+  KEY `cityId1_idx` (`cityId`),
+  KEY `cityId123_idx` (`cityId`),
+  CONSTRAINT `cityId123` FOREIGN KEY (`cityId`) REFERENCES `city` (`cityId`),
   CONSTRAINT `employeeId` FOREIGN KEY (`accountId`) REFERENCES `employee` (`employeeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -40,7 +44,7 @@ CREATE TABLE `accountdetails` (
 
 LOCK TABLES `accountdetails` WRITE;
 /*!40000 ALTER TABLE `accountdetails` DISABLE KEYS */;
-INSERT INTO `accountdetails` VALUES (1,1,'	Bank of Maharashtra','Mumbai, Maharashtra','4003830171874018','SMBC001'),(2,2,'	Bank of Maharashtra','Thrissur, Kerala','4111111111111111','NMCB001'),(3,3,'Andhra Bank','Thrissur, Kerala','5496198584584769','UTBI001'),(4,4,'	Bank of Baroda','Kolkata, West Bengal	','2223000048400011','UTBI001'),(5,5,'Allahabad Bank','Karur, Tamil Nadu','2223520043560014','UTBI001'),(6,6,'Andhra Bank','Nainital, Uttarakhand','378282246310005','UOVB001'),(7,7,'	Bank of Baroda','Nainital, Uttarakhand','371449635398431','SIBL001'),(8,8,'	Bank of Baroda','Kolkata, West Bengal	','6011111111111117','PJSB001'),(9,9,'Corporation Bank','Mumbai, Maharashtra','6011000990139424','RATN001'),(10,10,'Corporation Bank','Karur, Tamil Nadu','3530111333300000','ORBC001'),(11,11,'	Bank of Baroda','Thrissur, Kerala','3566002020360505','RATN005'),(12,12,'Canara Bank','Thrissur, Kerala','30569309025904','SBHY001'),(13,13,'Allahabad Bank','Nainital, Uttarakhand','38520000023237','MSHQ001'),(14,14,'	Bank of Maharashtra','Mumbai, Maharashtra','565546546546456','KOEX001'),(15,15,'Allahabad Bank','Kolkata, West Bengal	','768686787973','KSCB001'),(16,16,'Central Bank of India','Srinagar, Jammu and Kashmir','56768356756756','JSBL001'),(17,17,'Corporation Bank','Srinagar, Jammu and Kashmir','24544644396646','VYSA001'),(18,18,'Andhra Bank','Thrissur, Kerala','55648574984354','JSBL001'),(19,19,'Andhra Bank','Srinagar, Jammu and Kashmir','3547668274635','CHAS001'),(20,20,'Allahabad Bank','Thrissur, Kerala','56436574564468','ICIC001');
+INSERT INTO `accountdetails` VALUES (1,1,'	Bank of Maharashtra','thane',30,'4003830171874018','SMBC001'),(2,2,'	Bank of Maharashtra','by-pass road',32,'4111111111111111','NMCB001'),(3,3,'Andhra Bank','subahash nagra',32,'5496198584584769','UTBI001'),(4,4,'	Bank of Baroda','pilibhit road',33,'2223000048400011','UTBI001'),(5,5,'Allahabad Bank','karamchari nagar',39,'2223520043560014','UTBI001'),(6,6,'Andhra Bank','prem nagar',35,'378282246310005','UOVB001'),(7,7,'	Bank of Baroda','rajendra nagar',34,'371449635398431','SIBL001'),(8,8,'	Bank of Baroda','kurmanchal nagr',32,'6011111111111117','PJSB001'),(9,9,'Corporation Bank','vaishali',30,'6011000990139424','RATN001'),(10,10,'Corporation Bank','badkal station',30,'3530111333300000','ORBC001'),(11,11,'	Bank of Baroda','faridabad road',36,'3566002020360505','RATN005'),(12,12,'Canara Bank','gandhi road',33,'30569309025904','SBHY001'),(13,13,'Allahabad Bank','minister road',36,'38520000023237','MSHQ001'),(14,14,'	Bank of Maharashtra','palace road',38,'565546546546456','KOEX001'),(15,15,'Allahabad Bank','by pass',38,'768686787973','KSCB001'),(16,16,'Central Bank of India','sec 28',37,'56768356756756','JSBL001'),(17,17,'Corporation Bank','sec30',37,'24544644396646','VYSA001'),(18,18,'Andhra Bank','sec54, part-2',36,'55648574984354','JSBL001'),(19,19,'Andhra Bank','karim park ',34,'3547668274635','CHAS001'),(20,20,'Allahabad Bank','sec78 part-c ,black -A',36,'56436574564468','ICIC001');
 /*!40000 ALTER TABLE `accountdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -53,8 +57,8 @@ DROP TABLE IF EXISTS `address`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `address` (
   `addressId` int NOT NULL AUTO_INCREMENT,
+  `addressTypeId` int NOT NULL,
   `employeeId` int NOT NULL,
-  `addressType` varchar(45) NOT NULL,
   `addressLine1` varchar(200) NOT NULL,
   `addressLine2` varchar(45) DEFAULT NULL,
   `landmark` varchar(45) DEFAULT NULL,
@@ -63,7 +67,10 @@ CREATE TABLE `address` (
   PRIMARY KEY (`addressId`),
   KEY `employeeId` (`employeeId`),
   KEY `cityId1_idx` (`cityId`),
+  KEY `addressTypeId_idx` (`addressTypeId`),
+  KEY `addressType_idx` (`addressTypeId`),
   CONSTRAINT `address_ibfk_1` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`),
+  CONSTRAINT `addressType` FOREIGN KEY (`addressTypeId`) REFERENCES `addresstype` (`adressTypeId`),
   CONSTRAINT `cityId1` FOREIGN KEY (`cityId`) REFERENCES `city` (`cityId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -74,8 +81,33 @@ CREATE TABLE `address` (
 
 LOCK TABLES `address` WRITE;
 /*!40000 ALTER TABLE `address` DISABLE KEYS */;
-INSERT INTO `address` VALUES (1,2,'same','h.no 4546 ','ganli mahulla chock ',' near barely polise station',8,'243122'),(4,7,'permanent','Ap #449-2327 ',' Semper Road','',7,'Z3613'),(5,5,'permanent','759-3575 ','Dictum. Street','',44,'644656'),(6,9,'same','645-7157 ','Tincidunt Avenue','',12,'54551'),(7,7,'current','Ap #275-4119 ','Ac, St.','near prem nagar',5,'4165'),(8,8,'same','Ap #708-4948 ','Donec Ave','',33,'23419'),(9,10,'permanent','924-6288 ','Dolor Rd.','',36,'67869'),(10,11,'current','P.O. Box 956, ','1827 Suscipit Rd.','near lajpaqt market',29,'48129'),(11,12,'permanent','244-9065 ','Velit Ave','',17,'2965'),(12,13,'same','P.O. Box 657, ','2367 Class Avenue','near science museum',36,'09741'),(13,14,'permanent','977 ','Enim. Road','',8,'11633'),(14,15,'permanent','618-6437 ','Erat St.','',38,'09032'),(15,17,'same','880-8865 ','Velit. Rd.','',43,'815960'),(16,16,'same','896-2750 ','Nisi Street','',44,'4526HB'),(17,20,'permanent','P.O. Box 655, 3985 ','Sodales. St.','',45,'8024'),(18,18,'permanent','P.O. Box 733',' 7928 Ipsum St.','right behind pedestarian path',1,'70131'),(19,19,'same','Ap #971-6733',' Nam St.','',2,'79212'),(20,11,'same','674',' Nostra, St.','',3,'889546'),(21,12,'current','9737',' Bibendum Avenue','',4,'9491'),(22,15,'current','P.O. Box 942, ','2788  Interdum Avenue','',5,'464113'),(23,18,'current','P.O. Box 481,',' 2434 Et Street','opposite to metro station',6,'50974'),(24,20,'current','P.O. Box 622,',' 816 Nisi. Ave','',7,'21479'),(25,14,'current','7075 Phasellus Av.',NULL,'',8,'760322'),(26,6,'same','Ap #989-9327',' Arcu Street','',9,'6849'),(27,5,'current','626 Purus Avenue',NULL,'near kallu chauraha',10,'483374'),(28,3,'same','P.O. Box 971',', 6822 Quam Avenue','',11,'65600'),(29,1,'same','Ap #248-9129 A, St.',NULL,'',12,'384236');
+INSERT INTO `address` VALUES (1,3,2,'h.no 4546 ','ganli mahulla chock ',' near barely polise station',8,'243122'),(4,2,7,'Ap #449-2327 ',' Semper Road','',7,'Z3613'),(5,2,5,'759-3575 ','Dictum. Street','',44,'644656'),(6,3,9,'645-7157 ','Tincidunt Avenue','',12,'54551'),(7,1,7,'Ap #275-4119 ','Ac, St.','near prem nagar',5,'4165'),(8,3,8,'Ap #708-4948 ','Donec Ave','',33,'23419'),(9,2,10,'924-6288 ','Dolor Rd.','',36,'67869'),(10,1,11,'P.O. Box 956, ','1827 Suscipit Rd.','near lajpaqt market',29,'48129'),(11,2,12,'244-9065 ','Velit Ave','',17,'2965'),(12,3,13,'P.O. Box 657, ','2367 Class Avenue','near science museum',36,'09741'),(13,2,14,'977 ','Enim. Road','',8,'11633'),(14,2,15,'618-6437 ','Erat St.','',38,'09032'),(15,3,17,'880-8865 ','Velit. Rd.','',43,'815960'),(16,3,16,'896-2750 ','Nisi Street','',44,'4526HB'),(17,2,20,'P.O. Box 655, 3985 ','Sodales. St.','',45,'8024'),(18,2,18,'P.O. Box 733',' 7928 Ipsum St.','right behind pedestarian path',1,'70131'),(19,3,19,'Ap #971-6733',' Nam St.','',2,'79212'),(20,3,11,'674',' Nostra, St.','',3,'889546'),(21,1,12,'9737',' Bibendum Avenue','',4,'9491'),(22,1,15,'P.O. Box 942, ','2788  Interdum Avenue','',5,'464113'),(23,1,18,'P.O. Box 481,',' 2434 Et Street','opposite to metro station',6,'50974'),(24,1,20,'P.O. Box 622,',' 816 Nisi. Ave','',7,'21479'),(25,1,14,'7075 Phasellus Av.',NULL,'',8,'760322'),(26,3,6,'Ap #989-9327',' Arcu Street','',9,'6849'),(27,1,5,'626 Purus Avenue',NULL,'near kallu chauraha',10,'483374'),(28,3,3,'P.O. Box 971',', 6822 Quam Avenue','',11,'65600'),(29,3,1,'Ap #248-9129 A, St.',NULL,'',12,'384236');
 /*!40000 ALTER TABLE `address` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `addresstype`
+--
+
+DROP TABLE IF EXISTS `addresstype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `addresstype` (
+  `adressTypeId` int NOT NULL AUTO_INCREMENT,
+  `addressType` varchar(45) NOT NULL,
+  PRIMARY KEY (`adressTypeId`),
+  UNIQUE KEY `Type_UNIQUE` (`addressType`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `addresstype`
+--
+
+LOCK TABLES `addresstype` WRITE;
+/*!40000 ALTER TABLE `addresstype` DISABLE KEYS */;
+INSERT INTO `addresstype` VALUES (1,'current'),(2,'permanent'),(3,'same');
+/*!40000 ALTER TABLE `addresstype` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -202,13 +234,15 @@ DROP TABLE IF EXISTS `contactinformation`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `contactinformation` (
   `contactId` int NOT NULL AUTO_INCREMENT,
-  `contactType` varchar(45) NOT NULL,
   `contactNumber` varchar(45) NOT NULL,
   `employeeId` int NOT NULL,
   `countryCodeId` int NOT NULL,
+  `contactTypeId` int NOT NULL,
   PRIMARY KEY (`contactId`),
   KEY `employeeID2_idx` (`employeeId`),
   KEY `countryCodeId_idx` (`countryCodeId`),
+  KEY `contactTypeId_idx` (`contactTypeId`),
+  CONSTRAINT `contactTypeId` FOREIGN KEY (`contactTypeId`) REFERENCES `contacttype` (`contactTypeId`),
   CONSTRAINT `countryId02` FOREIGN KEY (`countryCodeId`) REFERENCES `country` (`countryId`),
   CONSTRAINT `employeeID2` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -220,8 +254,33 @@ CREATE TABLE `contactinformation` (
 
 LOCK TABLES `contactinformation` WRITE;
 /*!40000 ALTER TABLE `contactinformation` DISABLE KEYS */;
-INSERT INTO `contactinformation` VALUES (1,'mobile','427 4111655',1,1),(2,'mobile','7412589634',3,2),(3,'fax','1513124',3,3),(4,'landline','4668462',4,4),(5,'mobile','9886354984',5,5),(6,'mobile','7979564145',6,6),(7,'mobile','7979564156',7,7),(8,'mobile','7979564178',8,8),(9,'mobile','7979564185',9,9),(10,'mobile','7979564112',10,10),(11,'mobile','7979564166',11,1),(12,'mobile','7979564190',12,1),(13,'mobile','7979564199',12,3),(14,'mobile','7979564177',13,4),(15,'mobile','7979564133',14,5),(16,'mobile','7979564155',15,6),(17,'mobile','2343556667',16,7),(18,'mobile','7979564123',17,8),(19,'mobile','7979565311',18,9),(20,'mobile','4564680566',18,5),(21,'mobile','5746752565',19,7),(22,'mobile','7979565366',20,8),(23,'mobile','7979565356',2,10);
+INSERT INTO `contactinformation` VALUES (1,'427 4111655',1,1,1),(2,'7412589634',3,2,1),(3,'1513124',3,3,3),(4,'4668462',4,4,2),(5,'9886354984',5,5,1),(6,'7979564145',6,6,1),(7,'7979564156',7,7,1),(8,'7979564178',8,8,1),(9,'7979564185',9,9,1),(10,'7979564112',10,10,1),(11,'7979564166',11,1,1),(12,'7979564190',12,1,1),(13,'7979564199',12,3,1),(14,'7979564177',13,4,1),(15,'7979564133',14,5,1),(16,'7979564155',15,6,1),(17,'2343556667',16,7,1),(18,'7979564123',17,8,1),(19,'7979565311',18,9,1),(20,'4564680566',18,5,1),(21,'5746752565',19,7,1),(22,'7979565366',20,8,1),(23,'7979565356',2,10,1);
 /*!40000 ALTER TABLE `contactinformation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `contacttype`
+--
+
+DROP TABLE IF EXISTS `contacttype`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `contacttype` (
+  `contactTypeId` int NOT NULL AUTO_INCREMENT,
+  `contactType` varchar(45) NOT NULL,
+  PRIMARY KEY (`contactTypeId`),
+  UNIQUE KEY `contactTypeId_UNIQUE` (`contactTypeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `contacttype`
+--
+
+LOCK TABLES `contacttype` WRITE;
+/*!40000 ALTER TABLE `contacttype` DISABLE KEYS */;
+INSERT INTO `contacttype` VALUES (1,'mobile'),(2,'landline'),(3,'fax');
+/*!40000 ALTER TABLE `contacttype` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -397,9 +456,9 @@ DROP TABLE IF EXISTS `educationdetails`;
 CREATE TABLE `educationdetails` (
   `educationId` int NOT NULL AUTO_INCREMENT,
   `qualification` varchar(45) NOT NULL,
-  `fieldOfStudy` varchar(45) NOT NULL,
+  `fieldOfStudy` varchar(45) DEFAULT NULL,
   `instituteName` varchar(100) NOT NULL,
-  `universityName` varchar(150) NOT NULL,
+  `universityName` varchar(150) DEFAULT NULL,
   `startDate` date NOT NULL,
   `endDate` date NOT NULL,
   `employeeId` int NOT NULL,
@@ -429,18 +488,17 @@ DROP TABLE IF EXISTS `employee`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `employee` (
   `employeeId` int NOT NULL AUTO_INCREMENT,
-  `titleID` int NOT NULL,
+  `salutationId` int NOT NULL,
   `firstName` varchar(45) NOT NULL,
   `middleName` varchar(45) DEFAULT NULL,
   `lastName` varchar(45) NOT NULL,
   `employeeGenderId` int NOT NULL,
   `BirthDate` date NOT NULL,
-  `joinDate` date NOT NULL,
   PRIMARY KEY (`employeeId`),
   KEY `genderId_idx` (`employeeGenderId`),
-  KEY `titleID2_idx` (`titleID`),
+  KEY `titleID2_idx` (`salutationId`),
   CONSTRAINT `genderId` FOREIGN KEY (`employeeGenderId`) REFERENCES `gender` (`genderId`),
-  CONSTRAINT `titleID2` FOREIGN KEY (`titleID`) REFERENCES `title` (`titleId`)
+  CONSTRAINT `SalutationID2` FOREIGN KEY (`salutationId`) REFERENCES `salutation` (`salutationId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -450,7 +508,7 @@ CREATE TABLE `employee` (
 
 LOCK TABLES `employee` WRITE;
 /*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,1,'suraj','singh','rawat',1,'1995-12-29','2020-06-01'),(2,1,'animesh',NULL,'dass',1,'1995-02-07','2020-06-01'),(3,2,'Megha',NULL,'gupta',2,'1998-02-09','2017-12-20'),(4,1,'Rishabh',NULL,'Bansal',1,'1996-12-26','2019-12-11'),(5,1,'Jaswinder',NULL,'singh',1,'1992-04-30','2018-11-22'),(6,1,'namit',NULL,'chauhan',1,'1994-04-25','2014-02-02'),(7,2,'rishu',NULL,'singh',2,'1991-03-29','2016-10-20'),(8,1,'sahil',NULL,'singh',1,'1980-11-09','2015-12-01'),(9,1,'rishikant',NULL,'kumar',1,'1985-07-13','2019-11-10'),(10,1,'mayank',NULL,'dixit',1,'1985-09-12','2011-12-10'),(11,1,'dinish',NULL,'atri',1,'1986-06-22','2016-11-01'),(12,1,'mayank',NULL,'kumar',1,'1983-01-02','2016-01-12'),(13,1,'rishabhh',NULL,'path',1,'1999-09-20','2018-01-20'),(14,2,'bhagyashri',NULL,'singh',2,'1991-01-09','2012-12-12'),(15,2,'nikita','','sharma',2,'1989-01-20','2020-06-10'),(16,1,'subh',NULL,'saxexna',1,'1990-10-10','2014-12-11'),(17,1,'hemanth',NULL,'rampal',1,'1994-09-10','2019-11-10'),(18,2,'anuradha',NULL,'singh',2,'1980-06-08','2017-11-11'),(19,1,'tarun',NULL,'bansal',1,'1987-09-12','2011-01-11'),(20,2,'megha',NULL,'singh',2,'1977-09-12','2016-01-11');
+INSERT INTO `employee` VALUES (1,1,'suraj','singh','rawat',1,'1995-12-29'),(2,1,'animesh',NULL,'dass',1,'1995-02-07'),(3,2,'Megha',NULL,'gupta',2,'1998-02-09'),(4,1,'Rishabh',NULL,'Bansal',1,'1996-12-26'),(5,1,'Jaswinder',NULL,'singh',1,'1992-04-30'),(6,1,'namit',NULL,'chauhan',1,'1994-04-25'),(7,2,'rishu',NULL,'singh',2,'1991-03-29'),(8,1,'sahil',NULL,'singh',1,'1980-11-09'),(9,1,'rishikant',NULL,'kumar',1,'1985-07-13'),(10,1,'mayank',NULL,'dixit',1,'1985-09-12'),(11,1,'dinish',NULL,'atri',1,'1986-06-22'),(12,1,'mayank',NULL,'kumar',1,'1983-01-02'),(13,1,'rishabhh',NULL,'path',1,'1999-09-20'),(14,2,'bhagyashri',NULL,'singh',2,'1991-01-09'),(15,2,'nikita','','sharma',2,'1989-01-20'),(16,1,'subh',NULL,'saxexna',1,'1990-10-10'),(17,1,'hemanth',NULL,'rampal',1,'1994-09-10'),(18,2,'anuradha',NULL,'singh',2,'1980-06-08'),(19,1,'tarun',NULL,'bansal',1,'1987-09-12'),(20,2,'megha',NULL,'singh',2,'1977-09-12');
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -558,10 +616,12 @@ CREATE TABLE `experience` (
   `startTime` date NOT NULL,
   `endTime` date NOT NULL,
   `employeeId` int NOT NULL,
-  `companyName` varchar(60) DEFAULT NULL,
-  `companyLoaction` varchar(100) DEFAULT NULL,
+  `companyName` varchar(60) NOT NULL,
+  `companyCityId` int NOT NULL,
   PRIMARY KEY (`experienceId`),
   KEY `employeeId_idx` (`employeeId`),
+  KEY `cityId71_idx` (`companyCityId`),
+  CONSTRAINT `cityId71` FOREIGN KEY (`companyCityId`) REFERENCES `city` (`cityId`),
   CONSTRAINT `employeeId1` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -572,7 +632,7 @@ CREATE TABLE `experience` (
 
 LOCK TABLES `experience` WRITE;
 /*!40000 ALTER TABLE `experience` DISABLE KEYS */;
-INSERT INTO `experience` VALUES (1,'core java','2012-02-01','2012-06-30',6,'TCS','gurgaon'),(2,'testing','2002-01-01','2004-02-08',16,'AMAZON','mumbai'),(3,'IOT','2015-07-14','2016-09-30',8,'INFOSYS','delhi'),(4,'Q.A','2015-04-12','2015-12-10',12,'WIPRO','gurgaon'),(5,'analyst','2019-01-01','2020-01-01',16,'EX2 INDIA ','faridabad'),(6,'gaming','2018-01-09','2019-09-20',18,'IBM','pune'),(7,'graphic designer','2017-09-09','2019-02-09',8,'TCS','hyderadbad'),(8,'android','2019-01-01','2019-12-11',4,'TECHILA','chennai'),(9,'ios','2017-01-01','2019-01-11',7,'TRANCIS','tamil nadu'),(10,'S.E.O','2019-01-01','2020-01-01',10,'GLOBAL CONTINUMM','pune'),(11,'web Development','2012-07-01','2014-08-30',6,'WIPRO','mumbai'),(12,'data analyst','2015-11-20','2016-12-30',19,'HCL','delhi');
+INSERT INTO `experience` VALUES (1,'core java','2012-02-01','2012-06-30',6,'TCS',30),(2,'testing','2002-01-01','2004-02-08',16,'AMAZON',31),(3,'IOT','2015-07-14','2016-09-30',8,'INFOSYS',32),(4,'Q.A','2015-04-12','2015-12-10',12,'WIPRO',36),(5,'analyst','2019-01-01','2020-01-01',16,'EX2 INDIA ',34),(6,'gaming','2018-01-09','2019-09-20',18,'IBM',32),(7,'graphic designer','2017-09-09','2019-02-09',8,'TCS',32),(8,'android','2019-01-01','2019-12-11',4,'TECHILA',39),(9,'ios','2017-01-01','2019-01-11',7,'TRANCIS',39),(10,'S.E.O','2019-01-01','2020-01-01',10,'GLOBAL CONTINUMM',34),(11,'web Development','2012-07-01','2014-08-30',6,'WIPRO',32),(12,'data analyst','2015-11-20','2016-12-30',19,'HCL',30);
 /*!40000 ALTER TABLE `experience` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -584,21 +644,21 @@ DROP TABLE IF EXISTS `familyrelationdetails`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `familyrelationdetails` (
-  `nameId` int NOT NULL AUTO_INCREMENT,
-  `titleId` int NOT NULL,
+  `familyRelationDetailsId` int NOT NULL AUTO_INCREMENT,
+  `salutationId` int NOT NULL,
   `firstName` varchar(45) NOT NULL,
   `middleName` varchar(45) DEFAULT NULL,
   `lastName` varchar(45) NOT NULL,
   `relationId` int NOT NULL,
   `employeeId` int DEFAULT NULL,
-  PRIMARY KEY (`nameId`),
-  UNIQUE KEY `nameId_UNIQUE` (`nameId`),
-  KEY `titleId_idx` (`titleId`),
+  PRIMARY KEY (`familyRelationDetailsId`),
+  UNIQUE KEY `nameId_UNIQUE` (`familyRelationDetailsId`),
+  KEY `titleId_idx` (`salutationId`),
   KEY `relationID_idx` (`relationId`),
   KEY `employeeID45_idx` (`employeeId`),
   CONSTRAINT `employeeID45` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`),
   CONSTRAINT `relationID` FOREIGN KEY (`relationId`) REFERENCES `relation` (`relationId`),
-  CONSTRAINT `titleId` FOREIGN KEY (`titleId`) REFERENCES `title` (`titleId`)
+  CONSTRAINT `salutationId` FOREIGN KEY (`salutationId`) REFERENCES `salutation` (`salutationId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -608,7 +668,7 @@ CREATE TABLE `familyrelationdetails` (
 
 LOCK TABLES `familyrelationdetails` WRITE;
 /*!40000 ALTER TABLE `familyrelationdetails` DISABLE KEYS */;
-INSERT INTO `familyrelationdetails` VALUES (21,1,'kunwar','singh','rawat',1,1),(22,1,'shimal','kumar','dass',1,2),(23,1,'ramesh',NULL,'gupta',1,3),(24,1,'vicky',NULL,'bansal',1,4),(25,1,'shikhar',NULL,'singh',1,5),(26,1,'shikhar',NULL,'chauhan',1,6),(27,1,'akshay',NULL,'singh',1,7),(28,1,'aakash',NULL,'singh',1,8),(29,1,'pankaj',NULL,'kumar',1,9),(30,1,'manoj',NULL,'dixit',1,10),(31,1,'shubham',NULL,'atri',1,11),(32,1,'aman',NULL,'dixit',1,12),(33,1,'shivam','','pant',1,13),(34,1,'sovan',NULL,'singh',1,14),(35,1,'priyank',NULL,'saxena',1,15),(36,1,'hemant',NULL,'saxena',1,16),(37,1,'khush',NULL,'rampal',1,17),(38,1,'gautam',NULL,'singh',1,18),(39,1,'dhermender',NULL,'bansakl',1,19),(40,1,'anuj',NULL,'rajpoot',1,20),(41,2,'pushpa',NULL,'devi',2,1),(42,2,'madhu','promila','dass',2,2),(43,2,'janki','','devi',2,3),(44,2,'neha',NULL,'bansal',2,4),(45,2,'shaivani',NULL,'singh',2,5),(46,2,'megha',NULL,'chauhan',2,6),(47,2,'anushka',NULL,'singh',2,7),(48,2,'parul',NULL,'singh',2,8),(49,2,'adati',NULL,'kumar',2,9),(50,2,'payal',NULL,'dixit',2,10),(51,2,'sakshi',NULL,'atri',2,11),(52,2,'alisha',NULL,'dixit',2,12),(53,2,'sakshi',NULL,'panth',2,13),(54,2,'gauri',NULL,'singh',2,14),(55,2,'priyanka',NULL,'saxena',2,15),(56,2,'himani',NULL,'saxena',2,16),(57,2,'payal',NULL,'rampal',2,17),(58,2,'tarushi',NULL,'singh',2,18),(59,2,'sakshi',NULL,'bansal',2,19),(60,2,'pinki',NULL,'rajpoot',2,20),(61,2,'sakshi',NULL,'singh',3,5),(62,1,'jagveer',NULL,'singh',3,7),(63,2,'sulekha',NULL,'singh',3,8),(64,2,'shubhangi',NULL,'atari',3,11),(65,2,'minakshi',NULL,'panth',3,13),(66,1,'subh',NULL,'sharmna',3,15),(67,2,'himanshi',NULL,'rampal',3,17),(68,1,'hemanth',NULL,'singh',3,20);
+INSERT INTO `familyrelationdetails` VALUES (21,1,'kunwar','singh','rawat',1,1),(22,1,'shimal','kumar','dass',1,2),(23,1,'ramesh',NULL,'gupta',1,3),(24,1,'vicky',NULL,'bansal',1,4),(25,1,'shikhar',NULL,'singh',1,5),(26,1,'shikhar',NULL,'chauhan',1,6),(27,1,'akshay',NULL,'singh',1,7),(28,1,'aakash',NULL,'singh',1,8),(29,1,'pankaj',NULL,'kumar',1,9),(30,1,'manoj',NULL,'dixit',1,10),(31,1,'shubham',NULL,'atri',1,11),(32,1,'aman',NULL,'dixit',1,12),(33,1,'shivam','','pant',1,13),(34,1,'sovan',NULL,'singh',1,14),(35,1,'priyank',NULL,'saxena',1,15),(36,5,'hemant',NULL,'saxena',1,16),(37,1,'khush',NULL,'rampal',1,17),(38,1,'gautam',NULL,'singh',1,18),(39,1,'dhermender',NULL,'bansakl',1,19),(40,1,'anuj',NULL,'rajpoot',1,20),(41,2,'pushpa',NULL,'devi',2,1),(42,2,'madhu','promila','dass',2,2),(43,2,'janki','','devi',2,3),(44,2,'neha',NULL,'bansal',2,4),(45,2,'shaivani',NULL,'singh',2,5),(46,2,'megha',NULL,'chauhan',2,6),(47,2,'anushka',NULL,'singh',2,7),(48,2,'parul',NULL,'singh',2,8),(49,2,'adati',NULL,'kumar',2,9),(50,2,'payal',NULL,'dixit',2,10),(51,2,'sakshi',NULL,'atri',2,11),(52,2,'alisha',NULL,'dixit',2,12),(53,2,'sakshi',NULL,'panth',2,13),(54,2,'gauri',NULL,'singh',2,14),(55,2,'priyanka',NULL,'saxena',2,15),(56,2,'himani',NULL,'saxena',2,16),(57,2,'payal',NULL,'rampal',2,17),(58,2,'tarushi',NULL,'singh',2,18),(59,2,'sakshi',NULL,'bansal',2,19),(60,2,'pinki',NULL,'rajpoot',2,20),(61,2,'sakshi',NULL,'singh',3,5),(62,1,'jagveer',NULL,'singh',3,7),(63,2,'sulekha',NULL,'singh',3,8),(64,2,'shubhangi',NULL,'atari',3,11),(65,2,'minakshi',NULL,'panth',3,13),(66,1,'subh',NULL,'sharmna',3,15),(67,2,'himanshi',NULL,'rampal',3,17),(68,1,'hemanth',NULL,'singh',3,20);
 /*!40000 ALTER TABLE `familyrelationdetails` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -632,7 +692,7 @@ CREATE TABLE `gender` (
 
 LOCK TABLES `gender` WRITE;
 /*!40000 ALTER TABLE `gender` DISABLE KEYS */;
-INSERT INTO `gender` VALUES (1,'male'),(2,'female'),(3,'others');
+INSERT INTO `gender` VALUES (1,'male'),(2,'female'),(3,'other');
 /*!40000 ALTER TABLE `gender` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -670,6 +730,35 @@ INSERT INTO `jobtitle` VALUES (1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),
 UNLOCK TABLES;
 
 --
+-- Table structure for table `joindate`
+--
+
+DROP TABLE IF EXISTS `joindate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `joindate` (
+  `joinDateId` int NOT NULL AUTO_INCREMENT,
+  `dateOfJoing` date NOT NULL,
+  `employeeId` int NOT NULL,
+  PRIMARY KEY (`joinDateId`),
+  UNIQUE KEY `joinDateId_UNIQUE` (`joinDateId`),
+  KEY `employeeId4_idx` (`employeeId`),
+  KEY `employeeId40_idx` (`employeeId`),
+  CONSTRAINT `employeeId40` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `joindate`
+--
+
+LOCK TABLES `joindate` WRITE;
+/*!40000 ALTER TABLE `joindate` DISABLE KEYS */;
+INSERT INTO `joindate` VALUES (1,'2020-06-01',1),(2,'2017-12-20',2),(3,'2014-02-02',3),(4,'2019-11-10',4),(5,'2016-01-12',5),(6,'2016-01-12',6),(7,'2019-11-10',7),(8,'2014-12-11',8),(9,'2011-12-10',9),(10,'2017-11-11',10),(11,'2020-06-01',11),(12,'2011-12-10',12),(13,'2011-12-10',13),(14,'2019-11-10',14),(15,'2017-11-11',15),(16,'2016-01-12',16),(17,'2016-01-11',17),(18,'2011-12-10',18),(19,'2016-01-11',19),(20,'2017-11-11',20);
+/*!40000 ALTER TABLE `joindate` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `logininfo`
 --
 
@@ -694,7 +783,7 @@ CREATE TABLE `logininfo` (
 
 LOCK TABLES `logininfo` WRITE;
 /*!40000 ALTER TABLE `logininfo` DISABLE KEYS */;
-INSERT INTO `logininfo` VALUES (21,'ssrawat@ex2india.com','6c3536d8f63d5aa11319989354af196d',1),(22,'adass@es2india.com','6c3536d8f63d5aa11319989354af196d',2),(23,'mgupta@ex2india.com','6c3536d8f63d5aa11319989354af196d',3),(24,'rbansal@ex2india.com','6c3536d8f63d5aa11319989354af196d',4),(25,'jsingh@ex2india.com','6c3536d8f63d5aa11319989354af196d',5),(26,'nchahuhan@ex2india.com','634716b2e9dda3f095145184b81acb99',6),(27,'rsingh@ex2india.com','464ed91494acb5693cdeface5a5c12ed',7),(28,'sdhawan@ex2india.com','598c4d6ef65d0fa7986a834635666ead',8),(29,'rkumar@ex2india.com','181ff8fa7818a9dc0201bf3d8f29417b',9),(30,'mdixit@ex2india.com','879c06dfa2612c2ecf8afd8e2456d27d',10),(31,'datri@ex2india.com','f10e094c7913bbb75bb0f9497dfd3a37',11),(32,'mdixit@ex2india.com','f8de4cf7aa982a45639ebd41e027830e',12),(33,'rpant@gmail.com','e1ce28a55877ad556344bdaf98beb441',13),(34,'bsingh@gmail.com','60d25c2d918be5f46443a81ac1ae5f87',14),(35,'nsaxena@gmail.com','f6bf20a6466e99533f3dd440cd24064c',15),(36,'ssaxena@ex2india.com','ddbac82a201a23d4737376af67b8e79d',16),(37,'hrampal@ex2india.com','42dba333c4c5b5f4d4ab68656983e057',17),(38,'asingh@ex2india.com','4d809ac623ba067c54bd9b94dc953dcb',18),(39,'tbansal@ex2india.com','b7e6923f6de66497d51789db0ef3571d',19),(40,'mrajpoot@ex2india.com','22bc4892fa5ae2c20f0f04b1939baa76',20);
+INSERT INTO `logininfo` VALUES (21,'ssrawat@ex2india.com','4dd49f4f84e4d6945e3bc6d14812004e',1),(22,'adass@es2india.com','6c3536d8f63d5aa11319989354af196d',2),(23,'mgupta@ex2india.com','6c3536d8f63d5aa11319989354af196d',3),(24,'rbansal@ex2india.com','6c3536d8f63d5aa11319989354af196d',4),(25,'jsingh@ex2india.com','6c3536d8f63d5aa11319989354af196d',5),(26,'nchahuhan@ex2india.com','634716b2e9dda3f095145184b81acb99',6),(27,'rsingh@ex2india.com','464ed91494acb5693cdeface5a5c12ed',7),(28,'sdhawan@ex2india.com','598c4d6ef65d0fa7986a834635666ead',8),(29,'rkumar@ex2india.com','181ff8fa7818a9dc0201bf3d8f29417b',9),(30,'mdixit@ex2india.com','879c06dfa2612c2ecf8afd8e2456d27d',10),(31,'datri@ex2india.com','206373bf51578d742a9bd1d6c0254591',11),(32,'mdixit@ex2india.com','f8de4cf7aa982a45639ebd41e027830e',12),(33,'rpant@gmail.com','e1ce28a55877ad556344bdaf98beb441',13),(34,'bsingh@gmail.com','60d25c2d918be5f46443a81ac1ae5f87',14),(35,'nsaxena@gmail.com','f6bf20a6466e99533f3dd440cd24064c',15),(36,'ssaxena@ex2india.com','ddbac82a201a23d4737376af67b8e79d',16),(37,'hrampal@ex2india.com','42dba333c4c5b5f4d4ab68656983e057',17),(38,'asingh@ex2india.com','4d809ac623ba067c54bd9b94dc953dcb',18),(39,'tbansal@ex2india.com','b7e6923f6de66497d51789db0ef3571d',19),(40,'mrajpoot@ex2india.com','22bc4892fa5ae2c20f0f04b1939baa76',20);
 /*!40000 ALTER TABLE `logininfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -800,6 +889,36 @@ LOCK TABLES `relation` WRITE;
 /*!40000 ALTER TABLE `relation` DISABLE KEYS */;
 INSERT INTO `relation` VALUES (1,'father'),(2,'mother'),(3,'spouse');
 /*!40000 ALTER TABLE `relation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reportingperson`
+--
+
+DROP TABLE IF EXISTS `reportingperson`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `reportingperson` (
+  `reportingPersonId` int NOT NULL AUTO_INCREMENT,
+  `employeeId` int NOT NULL,
+  `reportingEmployeeId` int NOT NULL,
+  PRIMARY KEY (`reportingPersonId`),
+  UNIQUE KEY `reportingPersonId_UNIQUE` (`reportingPersonId`),
+  KEY `employeeId999_idx` (`employeeId`),
+  KEY `employeeId888_idx` (`reportingEmployeeId`),
+  CONSTRAINT `employeeId888` FOREIGN KEY (`reportingEmployeeId`) REFERENCES `employee` (`employeeId`),
+  CONSTRAINT `employeeId999` FOREIGN KEY (`employeeId`) REFERENCES `employee` (`employeeId`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reportingperson`
+--
+
+LOCK TABLES `reportingperson` WRITE;
+/*!40000 ALTER TABLE `reportingperson` DISABLE KEYS */;
+INSERT INTO `reportingperson` VALUES (1,1,5),(2,2,5),(3,3,5),(4,4,5),(5,5,5),(6,6,6),(7,7,6),(8,8,6),(9,9,6),(10,10,7),(11,11,7),(12,12,7),(13,13,7),(14,14,8),(15,15,8),(16,16,8),(17,17,8),(18,18,8),(19,19,9),(20,20,9);
+/*!40000 ALTER TABLE `reportingperson` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -927,6 +1046,31 @@ INSERT INTO `roles` VALUES (1,'admin'),(2,'user'),(3,'hr'),(4,'super-admin'),(5,
 UNLOCK TABLES;
 
 --
+-- Table structure for table `salutation`
+--
+
+DROP TABLE IF EXISTS `salutation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `salutation` (
+  `salutationId` int NOT NULL AUTO_INCREMENT,
+  `salutationType` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`salutationId`),
+  UNIQUE KEY `tilleId_UNIQUE` (`salutationId`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `salutation`
+--
+
+LOCK TABLES `salutation` WRITE;
+/*!40000 ALTER TABLE `salutation` DISABLE KEYS */;
+INSERT INTO `salutation` VALUES (1,'Mr.'),(2,'Mrs.'),(3,'Miss.'),(4,'Ms.'),(5,'Dr.');
+/*!40000 ALTER TABLE `salutation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `specification`
 --
 
@@ -983,31 +1127,6 @@ LOCK TABLES `state` WRITE;
 INSERT INTO `state` VALUES (1,1,'Bamyan'),(2,1,'Faryab'),(3,1,'Ghor'),(4,1,'Khost'),(5,2,'Adrar'),(6,2,'Chlef'),(7,2,'Béjaïa'),(8,4,'New South Wales'),(9,4,'Queensland'),(10,4,'South Australia'),(11,6,'Acre'),(12,6,' Maranhão'),(13,6,' Paraíba'),(14,7,'Hebei Province'),(15,7,'Jilin Province'),(16,7,'	Liaoning Province'),(17,8,'Alexandria '),(18,8,'Aswan '),(19,8,'Cairo '),(20,9,'Mumbai'),(21,9,'Delhi'),(22,9,'Uttar Pradesh'),(23,9,'Uttarakhand'),(24,10,'Shizuoka'),(25,10,'Tochigi'),(26,10,'Tokushima');
 /*!40000 ALTER TABLE `state` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `title`
---
-
-DROP TABLE IF EXISTS `title`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `title` (
-  `titleId` int NOT NULL AUTO_INCREMENT,
-  `titleType` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`titleId`),
-  UNIQUE KEY `tilleId_UNIQUE` (`titleId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `title`
---
-
-LOCK TABLES `title` WRITE;
-/*!40000 ALTER TABLE `title` DISABLE KEYS */;
-INSERT INTO `title` VALUES (1,'Mr.'),(2,'Mrs.'),(3,'Miss.'),(4,'Ms.');
-/*!40000 ALTER TABLE `title` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1018,4 +1137,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-04 16:48:54
+-- Dump completed on 2020-03-05 15:46:31
